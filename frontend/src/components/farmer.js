@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 import { SiBuzzfeed } from "react-icons/si";
 import { PiPlantFill } from "react-icons/pi";
 import Forecast from './forcast';
+import NewListing from './newListing';
 
 const Farmer = () => {
 
@@ -9,9 +10,13 @@ const Farmer = () => {
     const [displayFarmForcaster, setDisplayFarmForcaster] = useState(false);
 
     useEffect(() => {
-        console.log(displayFarmForcaster);
+        setDisplayMakeNewListing(false);
     }
     , [displayFarmForcaster]);
+    useEffect(() => {
+        setDisplayFarmForcaster(false);
+    }
+    , [displayMakeNewListing]);
 
 
     return ( 
@@ -20,7 +25,7 @@ const Farmer = () => {
                 <div id="default-sidebar" class=" w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
                 <div class="h-full px-3 py-4 overflow-y-auto bg-emerald-500">
                     <ul class="space-y-2 font-medium">
-                        <li>
+                        <li onClick={() => setDisplayMakeNewListing(!displayMakeNewListing)}>
                             <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-black group">
                             <PiPlantFill />
                             <span class="ms-3">Make New Listing</span>
@@ -56,6 +61,9 @@ const Farmer = () => {
             <div>
                 {displayFarmForcaster&&
                     <Forecast/>
+                }
+                {displayMakeNewListing&&
+                    <NewListing/>
                 }
             </div>
             

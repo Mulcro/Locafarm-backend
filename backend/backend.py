@@ -189,7 +189,8 @@ def create_listing():
 	user = User.query.filter_by(id=request.get_json().get('user_id')).first()
 	data = request.get_json()
     #Check if the user is a farmer before creating a listing
-	if user.level != 1:
+	print(data)
+	if data.get('level') != 1:
 		abort(403, 'User is not a farmer')
 
 	new_listing = Listing(

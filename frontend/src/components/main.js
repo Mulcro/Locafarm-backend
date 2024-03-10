@@ -34,7 +34,7 @@ const Main = () => {
             {listings&&
             <div className='flex flex-col justify-center items-center'>
 
-                <h2 className='font-bold text-2xl mb-5'>Available Listings</h2>
+                <h2 className='font-bold text-2xl my-5'>Available Listings</h2>
                 
                 {/* Write seach function */}
                 
@@ -44,7 +44,7 @@ const Main = () => {
                 </div>       
 
 
-                <div className="flex flex-row gap-4 flex-wrap">
+                <div className="grid grid-cols-3 gap-5">
                     {listings.map((listing, index) => (
                         <div key={index} id={listing.id} className="flex flex-col items-center max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gradient-to-b from-emerald-300 to-emerald-400 dark:border-gray-700">
                         <a href="#">
