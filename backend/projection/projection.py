@@ -24,7 +24,7 @@ import matplotlib.pyplot as plt
 root_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Construct the file path relative to the root directory
-file_path = os.path.join(root_dir, 'projection', 'Crop_recommendation.csv')
+file_path = os.path.join(root_dir, 'Crop_recommendation.csv')
 
 # Load the CSV file using the constructed file path
 df = pd.read_csv(file_path)
