@@ -1,10 +1,16 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useContext} from 'react';
+import {useLocation, useNavigate} from 'react-router-dom';
+import  UserContext  from '../Context/userContext';
 import { Link } from 'react-router-dom';
 
 //Modify link
 const Login = () => {
+    const [user,setUser] = useContext(UserContext);
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
+
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -21,11 +27,13 @@ const Login = () => {
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data.user);
-            alert(data.user);
-            sessionStorage.setItem('user', JSON.stringify(data.user));
-            window.location = '/';
-
+            setUser({
+              "id": data.id,
+              "firstName": data.firstName,
+              "level": data.level
+            });
+            sessionStorage.setItem('user', JSON.stringify(data.token));
+            navigate('/');
         })
         .catch((error) => {
             console.error('Error:', error);

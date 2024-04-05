@@ -110,15 +110,15 @@ const Forecast = () => {
 
                                         :
                                         
-                                        <div class="font-bold">After careful analysis, the crop that best fits your soil and environment of <br/>
+                                        <div class="font-bold">You entered; <br/>
                                             &nbsp;&nbsp;&nbsp;&nbsp; pH: {ph}<br/>
                                             &nbsp;&nbsp;&nbsp;&nbsp; temperature: {temperature}°C<br/>
                                             &nbsp;&nbsp;&nbsp;&nbsp; humidity: {humidity}% <br/>
                                             &nbsp;&nbsp;&nbsp;&nbsp; and rainFall: {rainFall}mm<br/>
-                                            &nbsp;&nbsp;&nbsp;&nbsp; With an NPK ratio of <br/>
+                                            &nbsp;&nbsp;&nbsp;&nbsp; with an NPK ratio of <br/>
                                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; N: {N}, P: {P}, K: {K}<br/>
                                             
-                                            <span className=' p-2 rounded font-bold text-indigo-500'>After careful analysis, the crop that best fits your soil is <span className="no-underline bg-emerald-300 mt-1 p-1 text-white rounded-xl">{results}</span></span>
+                                            <span className=' p-2 rounded font-bold text-indigo-500'>and after careful analysis, the crop that best fits your soil is <span className="no-underline bg-emerald-300 mt-1 p-1 text-white rounded-xl">{results}</span></span>
                                         </div>
 
                                     }
