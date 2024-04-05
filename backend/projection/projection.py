@@ -25,6 +25,7 @@ df=pd.read_csv('C:/Users/muler/Desktop/IX/backend/projection/Crop_recommendation
 df.head()
 df.describe()
 sns.heatmap(df.isnull(),cmap="coolwarm")
+
 c=df.label.astype('category')
 targets = dict(enumerate(c.cat.categories))
 df['target']=c.cat.codes
