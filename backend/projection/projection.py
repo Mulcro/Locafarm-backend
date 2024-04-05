@@ -21,7 +21,13 @@ warnings.simplefilter(action='ignore', category=UserWarning)
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-df=pd.read_csv('C:/Users/muler/Desktop/IX/backend/projection/Crop_recommendation.csv')
+root_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Construct the file path relative to the root directory
+file_path = os.path.join(root_dir, 'projection', 'Crop_recommendation.csv')
+
+# Load the CSV file using the constructed file path
+df = pd.read_csv(file_path)
 df.head()
 df.describe()
 sns.heatmap(df.isnull(),cmap="coolwarm")
