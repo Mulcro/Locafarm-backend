@@ -233,8 +233,18 @@ def become_farmer(user_id):
 @app.route('/plant-types', methods=['GET'])
 def get_plant_types():
 	plant_types = PlantType.query.all()
-	return jsonify([plant_type.serialize() for plant_type in plant_types])
-
+	
+	serilized_plant_types = [
+		{
+			'id': plant_type.id,
+			'name': plant_type.name,
+			'description': plant_type.description
+		}
+		for plant_type in plant_types
+	]
+ 
+	return jsonify({'plant_types': serilized_plant_types})
+	
 @app.route('/forecast', methods=['POST'])
 def forecast():
 	# user =  User.query.filter_by(id=request.get_json().get('user_id')).first()
