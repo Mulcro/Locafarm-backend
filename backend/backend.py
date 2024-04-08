@@ -12,7 +12,7 @@ app = Flask(__name__)
 # app.run(debug=True)
 CORS(app)
 database_name = 'plantProject'
-database_path = 'postgresql://aycgyrxpckuygo:4e1b6e1498d17fb884e5634b22e165b14a308ea9715e98d21dfad1baef48bdf3@ec2-44-213-151-75.compute-1.amazonaws.com:5432/dbjk60t9nksrta'
+database_path = 'postgresql://euzhvqvikvlbdi:c35181dbb815eaa2eaa5c82d4bf5cd27aa89ab2659518dd8e2e093db9661aa1d@ec2-3-233-77-220.compute-1.amazonaws.com:5432/dak1h8f8790hg8?sslmode=require'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = database_path
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
