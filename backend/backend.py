@@ -14,12 +14,10 @@ CORS(app)
 database_name = 'plantProject'
 database_path = 'postgresql://aycgyrxpckuygo:4e1b6e1498d17fb884e5634b22e165b14a308ea9715e98d21dfad1baef48bdf3@ec2-44-213-151-75.compute-1.amazonaws.com:5432/dbjk60t9nksrta'
 
-
 app.config['SQLALCHEMY_DATABASE_URI'] = database_path
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -54,19 +52,22 @@ class PlantType(db.Model):
     name = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
 
+class Order(db.Model):
+	__tablename__ = 'orders'
+
+	id = db.Column(db.Integer, primary_key=True)
+	listing_id = db.Column(db.Integer, nullable=False)
+	buyer_id = db.Column(db.Integer, nullable=False)
+	seller_id = db.Column(db.Integer, nullable=False)
+	quantity = db.Column(db.Integer, nullable=False)
+	total_price = db.Column(db.Float, nullable=False)
+	created_at = db.Column(db.DateTime, default=datetime.utcnow)
+	fulfilled = db.Column(db.Boolean, default=False)
+ 
+ 
 # Use the app context to create the tables
 with app.app_context():
     db.create_all()
-
-# @app.route('/', methods=['GET'])
-# def home():
-#     data = {
-#         "Name": "Mulero Alamou",
-#         "Country": "Nigeria",
-#         "City": "Lagos",
-#         "Plant": proj.predict_crop(2, 28, 28)[0]
-#     }
-#     return jsonify(data)
 
 
 @app.route('/register', methods=['POST'])
@@ -244,7 +245,7 @@ def get_plant_types():
 	]
  
 	return jsonify({'plant_types': serilized_plant_types})
-	
+# 
 @app.route('/forecast', methods=['POST'])
 def forecast():
 	# user =  User.query.filter_by(id=request.get_json().get('user_id')).first()
@@ -265,6 +266,103 @@ def forecast():
 	crop = prediction_result
 
 	return jsonify({'crop': crop})
+
+@app.route('/order', methods=['POST'])
+def order():
+	data = request.get_json()
+	user = User.query.filter_by(id=data.get('user_id')).first()
+	listing = Listing.query.filter_by(id=data.get('listing_id')).first()
+
+	# Check if the inventory is enough
+	if listing.inventory < data.get('quantity'):
+		abort(400, 'Not enough inventory')
+
+	new_order = Order(
+		listing_id=int(data.get('listing_id')),
+		buyer_id=int(data.get('user_id')),
+		seller_id=int(listing.user_id),
+		quantity=int(data.get('quantity')),
+		total_price=listing.price * int(data.get('quantity'))
+	)
+ 
+	db.session.add(new_order)
+	# Update the inventory
+	listing.inventory -= int(data.get('quantity'))
+	db.session.commit()
+
+	return jsonify({'message': 'Order successful'})
+
+@app.route('/orders/seller/<int:user_id>', methods=['GET'])
+def get_orders_for_seller(user_id):
+	user = User.query.filter_by(id=user_id).first()
+	if user is None:
+		abort(404, 'User not found')
+
+	listings = Listing.query.filter(Listing.user_id == user_id).all()
+	orders = []
+	for listing in listings:
+		orders += Order.query.filter(Order.listing_id == listing.id).all()
+
+	serialized_orders = [
+		{
+			'id': order.id,
+			'listing_id': order.listing_id,
+			'quantity': order.quantity,
+			'created_at': order.created_at.isoformat()
+		}
+		for order in orders
+	]
+
+	return jsonify({'orders': serialized_orders})
+
+@app.route('/orders/buyer/<int:user_id>', methods=['GET'])
+def get_orders_for_buyer(user_id):
+	user = User.query.filter_by(id=user_id).first()
+	if user is None:
+		abort(404, 'User not found')
+
+	orders = Order.query.filter(Order.user_id == user_id).all()
+	serialized_orders = [
+		{
+			'id': order.id,
+			'listing_id': order.listing_id,
+			'quantity': order.quantity,
+			'created_at': order.created_at.isoformat()
+		}
+		for order in orders
+	]
+
+	return jsonify({'orders': serialized_orders})
+
+@app.route('/orders/fulfill', methods=['POST'])
+def fulfill_order():
+	data = request.get_json()
+	order = Order.query.filter_by(id=data.get('order_id')).first()
+	if order is None:
+		abort(404, 'Order not found')
+
+	listing = Listing.query.filter_by(id=order.listing_id).first()
+	if listing is None:
+		abort(404, 'Listing not found')
+
+	# Update the inventory
+	listing.inventory -= order.quantity
+	db.session.commit()
+
+	return jsonify({'message': 'Order fulfilled successfully'})
+
+
+@app.route('/delete-listing/<int:listing_id>', methods=['DELETE'])
+def delete_listing(listing_id):
+	listing = Listing.query.filter_by(id=listing_id).first()
+	if listing is None:
+		abort(404, 'Listing not found')
+
+	db.session.delete(listing)
+	db.session.commit()
+
+	return jsonify({'message': 'Listing deleted successfully'})
+
 
 # @app.route('/get_user/<user_id>', methods=['GET'])
 # def get_user(user_id):
