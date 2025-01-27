@@ -10,7 +10,7 @@ from flask_cors import cross_origin
 
 app = Flask(__name__)
 # app.run(debug=True)
-CORS(app, resources={r"/*": {"origins": ["https://mighty-beach-62885-129eb7fa49c2.herokuapp.com/","http://localhost:3000"]}})
+CORS(app, resources={r"/*": {"origins": ["https://mighty-beach-62885-129eb7fa49c2.herokuapp.com","http://localhost:3000"]}})
 database_name = 'plantProject'
 # Dotenv didn't work so db key is here but shouldn't be here in prod
 database_path = 'postgresql://ucfirnqk6sihkk:pba6718cd237cad9b5f9a7b17cb824dee31cac2a1724d60ca14dac7eeea9bb2f6@c6m2hub4lh1mqp.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/dab6225v64b0rd'
