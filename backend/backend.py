@@ -10,9 +10,10 @@ from flask_cors import cross_origin
 
 app = Flask(__name__)
 # app.run(debug=True)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": ["https://mighty-beach-62885-129eb7fa49c2.herokuapp.com/","http://localhost:3000"]}})
 database_name = 'plantProject'
-database_path = 'postgresql://uqzcvwjuyozacd:f700b8d8f1d200688250c76c5640517920a1a5b92099063f5dd4c2f74fec610b@ec2-54-156-20-209.compute-1.amazonaws.com:5432/d59ecq7lcbvlj4'
+# Dotenv didn't work so db key is here but shouldn't be here in prod
+database_path = 'postgresql://ucfirnqk6sihkk:pba6718cd237cad9b5f9a7b17cb824dee31cac2a1724d60ca14dac7eeea9bb2f6@c6m2hub4lh1mqp.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/dab6225v64b0rd'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = database_path
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -98,9 +99,9 @@ def create_user():
 
 @app.route('/login', methods=['POST'])
 def login_user():
+	print("Hit")
 	data = request.get_json()
 	user = User.query.filter_by(email=data.get('email')).first()
-     
 	
 
 	if user and user.password == data.get('password'):
