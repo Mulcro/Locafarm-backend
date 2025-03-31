@@ -359,7 +359,7 @@ def delete_buyer_order(order_id):
 	data = request.get_json()
 	order = Order.query.get(order_id)
 
-	listing = Listing.query.get(data.listing_id)
+	listing = Listing.query.get(data.get('listing_id'))
 
 	listing.inventory += order.quantity
 
