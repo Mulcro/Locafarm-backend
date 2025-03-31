@@ -336,6 +336,7 @@ def get_orders_for_buyer(user_id):
 
 	return jsonify({'orders': serialized_orders})
 
+
 @app.route('/orders/fulfill', methods=['POST'])
 def fulfill_order():
 	data = request.get_json()
@@ -353,6 +354,19 @@ def fulfill_order():
 
 	return jsonify({'message': 'Order fulfilled successfully'})
 
+@app.route('/orders/buyer/<int:order_id>', methods=['DELETE'])
+def get_orders_for_buyer(order_id):
+	data = request.get_json()
+	order = Order.query.filter(id=order_id).first()
+
+	listing = Listing.query.get(data.listing_id)
+
+	listing.inventory += order.quantity
+
+	db.session.delete(order)
+	db.session.commit()
+
+	return jsonify({'message': 'order deleted successfully'})
 
 @app.route('/delete-listing/<int:listing_id>', methods=['DELETE'])
 def delete_listing(listing_id):
