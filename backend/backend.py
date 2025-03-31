@@ -123,7 +123,8 @@ def get_listings():
             'price': listing.price,
             'created_at': listing.created_at.isoformat(),  # Convert to string for JSON serialization
             'user_id': listing.user_id,
-            'type_id': listing.type_id
+            'type_id': listing.type_id,
+			'inventory': listing.inventory
             # Add other listing attributes as needed
         }
         for listing in all_listings
@@ -279,7 +280,7 @@ def order():
 
 	new_order = Order(
 		listing_id=int(data.get('listing_id')),
-		buyer_id=int(data.get('user_id')),
+		buyer_id=int(data.get('buyer_id')),
 		seller_id=int(listing.user_id),
 		quantity=int(data.get('quantity')),
 		total_price=listing.price * int(data.get('quantity'))
