@@ -160,7 +160,8 @@ def get_listing(listing_id):
 		'price': listing.price,
 		'created_at': listing.created_at.isoformat(),  # Convert to string for JSON serialization
 		'user_id': currUser,
-		'type_id': currType
+		'type_id': currType,
+		'inventory': listing.inventory
 		# Add other listing attributes as needed
 	})
 
