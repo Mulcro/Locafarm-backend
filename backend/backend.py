@@ -371,7 +371,7 @@ def fulfill_order():
 
 	return jsonify({'message': 'Order fulfilled successfully'})
 
-@app.route('/orders/buyer/<int:order_id>/delete', methods=['DELETE'])
+@app.route('/orders/<int:order_id>/delete', methods=['DELETE'])
 def delete_buyer_order(order_id):
 	data = request.get_json()
 	order = Order.query.get(order_id)
@@ -404,11 +404,6 @@ def delete_listing(listing_id):
 
     return jsonify({'message': 'Listing deleted successfully'})
 
-
-# @app.route('/get_user/<user_id>', methods=['GET'])
-# def get_user(user_id):
-#     user = User.objects.get_or_404(id=user_id)
-#     return jsonify({'first_name': user.first_name, 'last_name': user.last_name, 'email': user.email, 'created_at': user.created_at.isoformat()})
 
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
