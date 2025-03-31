@@ -357,7 +357,7 @@ def fulfill_order():
 @app.route('/orders/buyer/<int:order_id>/delete', methods=['DELETE'])
 def delete_buyer_order(order_id):
 	data = request.get_json()
-	order = Order.query.filter(id=order_id).first()
+	order = Order.query.get(order_id)
 
 	listing = Listing.query.get(data.listing_id)
 
