@@ -319,22 +319,30 @@ def get_orders_for_seller(user_id):
 
 @app.route('/orders/buyer/<int:user_id>', methods=['GET'])
 def get_orders_for_buyer(user_id):
-	user = User.query.filter_by(id=user_id).first()
-	if user is None:
-		abort(404, 'User not found')
+    user = User.query.filter_by(id=user_id).first()
+    if user is None:
+        abort(404, 'User not found')
 
-	orders = Order.query.filter(Order.buyer_id == user_id).all()
-	serialized_orders = [
-		{
-			'id': order.id,
-			'listing_id': order.listing_id,
-			'quantity': order.quantity,
-			'created_at': order.created_at.isoformat()
-		}
-		for order in orders
-	]
+    # Join Order and Listing so we can access the listing name.
+    orders_with_listing = (
+        db.session.query(Order, Listing.name)
+        .join(Listing, Order.listing_id == Listing.id)
+        .filter(Order.buyer_id == user_id)
+        .all()
+    )
 
-	return jsonify({'orders': serialized_orders})
+    serialized_orders = [
+        {
+            'id': order.id,
+            'listing_id': order.listing_id,
+            'listing_name': listing_name,
+            'quantity': order.quantity,
+            'created_at': order.created_at.isoformat()
+        }
+        for order, listing_name in orders_with_listing
+    ]
+
+    return jsonify({'orders': serialized_orders})
 
 
 @app.route('/orders/fulfill', methods=['POST'])
