@@ -271,11 +271,10 @@ def forecast():
 @app.route('/orders', methods=['POST'])
 def order():
 	data = request.get_json()
-	user = User.query.filter_by(id=data.get('user_id')).first()
 	listing = Listing.query.filter_by(id=data.get('listing_id')).first()
 
 	# Check if the inventory is enough
-	if listing.inventory < data.get('quantity'):
+	if int(listing.inventory) < int(data.get('quantity')):
 		abort(400, 'Not enough inventory')
 
 	new_order = Order(
