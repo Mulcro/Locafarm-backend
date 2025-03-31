@@ -311,11 +311,13 @@ def get_orders_for_seller(user_id):
         {
             'id': order.id,
             'listing_id': order.listing_id,
-            'buyer_first_name': buyer_first_name,
+            'buyer_first_name': order.buyer_first_name,
+			'buyer_last_name':order.buyer_last_name,
+			'buyer_id':order.buyer_id,
             'quantity': order.quantity,
             'created_at': order.created_at.isoformat()
         }
-        for order, buyer_first_name in orders_with_names
+        for order in orders_with_names
     ]
     
     return jsonify({'orders': serialized_orders})
