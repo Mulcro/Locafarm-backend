@@ -354,8 +354,8 @@ def fulfill_order():
 
 	return jsonify({'message': 'Order fulfilled successfully'})
 
-@app.route('/orders/buyer/<int:order_id>', methods=['DELETE'])
-def get_orders_for_buyer(order_id):
+@app.route('/orders/buyer/<int:order_id>/delete', methods=['DELETE'])
+def delete_buyer_order(order_id):
 	data = request.get_json()
 	order = Order.query.filter(id=order_id).first()
 
