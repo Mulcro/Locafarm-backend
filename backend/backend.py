@@ -268,7 +268,7 @@ def forecast():
 
 	return jsonify({'crop': crop})
 
-@app.route('/order', methods=['POST'])
+@app.route('/orders', methods=['POST'])
 def order():
 	data = request.get_json()
 	user = User.query.filter_by(id=data.get('user_id')).first()
