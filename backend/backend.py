@@ -370,14 +370,22 @@ def delete_buyer_order(order_id):
 
 @app.route('/delete-listing/<int:listing_id>', methods=['DELETE'])
 def delete_listing(listing_id):
-	listing = Listing.query.filter_by(id=listing_id).first()
-	if listing is None:
-		abort(404, 'Listing not found')
+    listing = Listing.query.get(listing_id)
+    if listing is None:
+        abort(404, 'Listing not found')
 
-	db.session.delete(listing)
-	db.session.commit()
+    # Retrieve all orders associated with the listing
+    orders = Order.query.filter(Order.listing_id == listing_id).all()
 
-	return jsonify({'message': 'Listing deleted successfully'})
+    # Delete each order
+    for order in orders:
+        db.session.delete(order)
+
+    # Delete the listing
+    db.session.delete(listing)
+    db.session.commit()
+
+    return jsonify({'message': 'Listing deleted successfully'})
 
 
 # @app.route('/get_user/<user_id>', methods=['GET'])
