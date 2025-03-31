@@ -301,7 +301,11 @@ def get_orders_for_seller(user_id):
         abort(404, 'User not found')
 
     orders_with_names = (
-        db.session.query(Order, User.first_name.label("buyer_first_name"))
+        db.session.query(
+            Order,
+            User.first_name.label("buyer_first_name"),
+            User.last_name.label("buyer_last_name")
+        )
         .join(User, Order.buyer_id == User.id)
         .filter(Order.seller_id == user_id)
         .all()
@@ -311,13 +315,13 @@ def get_orders_for_seller(user_id):
         {
             'id': order.id,
             'listing_id': order.listing_id,
-            'buyer_first_name': order.buyer_first_name,
-			'buyer_last_name':order.buyer_last_name,
-			'buyer_id':order.buyer_id,
+            'buyer_first_name': buyer_first_name,
+            'buyer_last_name': buyer_last_name,
+            'buyer_id': order.buyer_id,
             'quantity': order.quantity,
             'created_at': order.created_at.isoformat()
         }
-        for order in orders_with_names
+        for order, buyer_first_name, buyer_last_name in orders_with_names
     ]
     
     return jsonify({'orders': serialized_orders})
