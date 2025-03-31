@@ -296,26 +296,29 @@ def order():
 
 @app.route('/orders/seller/<int:user_id>', methods=['GET'])
 def get_orders_for_seller(user_id):
-	user = User.query.filter_by(id=user_id).first()
-	if user is None:
-		abort(404, 'User not found')
+    user = User.query.get(user_id)
+    if user is None:
+        abort(404, 'User not found')
 
-	listings = Listing.query.filter(Listing.user_id == user_id).all()
-	orders = []
-	for listing in listings:
-		orders += Order.query.filter(Order.listing_id == listing.id).all()
-
-	serialized_orders = [
-		{
-			'id': order.id,
-			'listing_id': order.listing_id,
-			'quantity': order.quantity,
-			'created_at': order.created_at.isoformat()
-		}
-		for order in orders
-	]
-
-	return jsonify({'orders': serialized_orders})
+    orders_with_names = (
+        db.session.query(Order, User.first_name.label("buyer_first_name"))
+        .join(User, Order.buyer_id == User.id)
+        .filter(Order.seller_id == user_id)
+        .all()
+    )
+    
+    serialized_orders = [
+        {
+            'id': order.id,
+            'listing_id': order.listing_id,
+            'buyer_first_name': buyer_first_name,
+            'quantity': order.quantity,
+            'created_at': order.created_at.isoformat()
+        }
+        for order, buyer_first_name in orders_with_names
+    ]
+    
+    return jsonify({'orders': serialized_orders})
 
 @app.route('/orders/buyer/<int:user_id>', methods=['GET'])
 def get_orders_for_buyer(user_id):
