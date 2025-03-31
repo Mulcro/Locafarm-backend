@@ -321,7 +321,7 @@ def get_orders_for_buyer(user_id):
 	if user is None:
 		abort(404, 'User not found')
 
-	orders = Order.query.filter(Order.user_id == user_id).all()
+	orders = Order.query.filter(Order.buyer_id == user_id).all()
 	serialized_orders = [
 		{
 			'id': order.id,
