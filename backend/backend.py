@@ -333,10 +333,11 @@ def get_orders_for_buyer(user_id):
     if user is None:
         abort(404, 'User not found')
 
-    # Join Order and Listing so we can access the listing name.
+    # Join Order, Listing, and User (for seller info) so we can access the listing name and seller's first name.
     orders_with_listing = (
-        db.session.query(Order, Listing.name)
+        db.session.query(Order, Listing.name, User.first_name)
         .join(Listing, Order.listing_id == Listing.id)
+        .join(User, Order.seller_id == User.id)  # Join the seller info using seller_id
         .filter(Order.buyer_id == user_id)
         .all()
     )
@@ -346,11 +347,12 @@ def get_orders_for_buyer(user_id):
             'id': order.id,
             'listing_id': order.listing_id,
             'listing_name': listing_name,
+            'seller_firstname': seller_first_name,
             'quantity': order.quantity,
-			'fulfilled':order.fulfilled,
+            'fulfilled': order.fulfilled,
             'created_at': order.created_at.isoformat()
         }
-        for order, listing_name in orders_with_listing
+        for order, listing_name, seller_first_name in orders_with_listing
     ]
 
     return jsonify({'orders': serialized_orders})
