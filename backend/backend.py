@@ -362,7 +362,7 @@ def fulfill_order(order_id):
 
 	order.fulfilled = True
 
-	db.session.comit(order)
+	db.session.commit()
 
 	return jsonify({'message': 'Order fulfilled successfully'})
 
