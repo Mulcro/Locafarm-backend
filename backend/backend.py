@@ -353,21 +353,16 @@ def get_orders_for_buyer(user_id):
 
     return jsonify({'orders': serialized_orders})
 
-
-@app.route('/orders/fulfill', methods=['POST'])
-def fulfill_order():
-	data = request.get_json()
-	order = Order.query.filter_by(id=data.get('order_id')).first()
+# Not working
+@app.route('/orders/<int:order_id>/fulfill', methods=['POST'])
+def fulfill_order(order_id):
+	order = Order.query.get(order_id)
 	if order is None:
 		abort(404, 'Order not found')
 
-	listing = Listing.query.filter_by(id=order.listing_id).first()
-	if listing is None:
-		abort(404, 'Listing not found')
+	order.fulfilled = True
 
-	# Update the inventory
-	listing.inventory -= order.quantity
-	db.session.commit()
+	db.session.comit()
 
 	return jsonify({'message': 'Order fulfilled successfully'})
 
