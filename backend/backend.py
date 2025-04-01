@@ -318,6 +318,7 @@ def get_orders_for_seller(user_id):
             'buyer_first_name': buyer_first_name,
             'buyer_last_name': buyer_last_name,
             'buyer_id': order.buyer_id,
+			'fulfilled':order.fulfilled,
             'quantity': order.quantity,
             'created_at': order.created_at.isoformat()
         }
