@@ -347,6 +347,7 @@ def get_orders_for_buyer(user_id):
             'listing_id': order.listing_id,
             'listing_name': listing_name,
             'quantity': order.quantity,
+			'fulfilled':order.fulfilled,
             'created_at': order.created_at.isoformat()
         }
         for order, listing_name in orders_with_listing
